@@ -260,8 +260,20 @@ function isContainNumber(num, digit) {
  *  [2, 3, 9, 5] => 2       => 2 + 3 === 5 then balance element is 9 and its index = 2
  *  [1, 2, 3, 4, 5] => -1   => no balance element
  */
-function getBalanceIndex(/* arr */) {
-  throw new Error('Not implemented');
+function getBalanceIndex(arr) {
+  let left = arr[0];
+  let right = 0;
+  for (let i = 2; i < arr.length; i += 1) {
+    right += arr[i];
+  }
+
+  for (let i = 1; i < arr.length - 1; i += 1) {
+    if (left === right) return i;
+    left += arr[i];
+    right -= arr[i + 1];
+  }
+
+  return -1;
 }
 
 /**
@@ -285,8 +297,55 @@ function getBalanceIndex(/* arr */) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  throw new Error('Not implemented');
+function getSpiralMatrix(size) {
+  const result = new Array(size);
+  for (let i = 0; i < size; i += 1) {
+    result[i] = new Array(size);
+  }
+
+  let arrLength = size - 1;
+  let currentLap = 0;
+
+  function turnRight(x, y, n) {
+    let count = n;
+    for (let i = x; i <= arrLength; i += 1) {
+      count += 1;
+      result[y][i] = count;
+    }
+    if (size ** 2 > count) turnDown(arrLength, y, count - 1);
+  }
+
+  function turnDown(x, y, n) {
+    let count = n;
+    for (let i = y; i <= arrLength; i += 1) {
+      count += 1;
+      result[i][x] = count;
+    }
+    if (size ** 2 > count) turnLeft(arrLength, arrLength, count - 1);
+  }
+
+  function turnLeft(x, y, n) {
+    let count = n;
+    for (let i = x; i >= currentLap; i -= 1) {
+      count += 1;
+      result[y][i] = count;
+    }
+    if (size ** 2 > count) turnUp(currentLap, arrLength, count - 1);
+  }
+
+  function turnUp(x, y, n) {
+    let count = n;
+    for (let i = y; i >= size - arrLength; i -= 1) {
+      count += 1;
+      result[i][x] = count;
+    }
+    arrLength -= 1;
+    currentLap += 1;
+    if (size ** 2 > count) turnRight(currentLap, currentLap, count);
+  }
+
+  turnRight(0, 0, 0);
+  return result;
 }
 
 /**
