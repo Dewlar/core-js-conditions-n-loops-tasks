@@ -302,49 +302,51 @@ function getSpiralMatrix(size) {
   for (let i = 0; i < size; i += 1) {
     result[i] = new Array(size);
   }
+  let n = 0;
+  let x = 0;
+  let y = 0;
 
   let arrLength = size - 1;
   let currentLap = 0;
+  const maxNumber = size ** 2;
 
-  function turnRight(x, y, n) {
-    let count = n;
-    for (let i = x; i <= arrLength; i += 1) {
-      count += 1;
-      result[y][i] = count;
+  for (let j = 0; j < Math.ceil(size / 2); j += 1) {
+    if (maxNumber > n) {
+      for (let i = x; i <= arrLength; i += 1) {
+        n += 1;
+        result[y][i] = n;
+      }
+      x = arrLength;
+      n -= 1;
     }
-    if (size ** 2 > count) turnDown(arrLength, y, count - 1);
+    if (maxNumber > n) {
+      for (let i = y; i <= arrLength; i += 1) {
+        n += 1;
+        result[i][x] = n;
+      }
+      y = arrLength;
+      n -= 1;
+    }
+    if (maxNumber > n) {
+      for (let i = x; i >= currentLap; i -= 1) {
+        n += 1;
+        result[y][i] = n;
+      }
+      x = currentLap;
+      n -= 1;
+    }
+    if (maxNumber > n) {
+      for (let i = y; i >= size - arrLength; i -= 1) {
+        n += 1;
+        result[i][x] = n;
+      }
+      arrLength -= 1;
+      currentLap += 1;
+      y = currentLap;
+      x = currentLap;
+    }
   }
 
-  function turnDown(x, y, n) {
-    let count = n;
-    for (let i = y; i <= arrLength; i += 1) {
-      count += 1;
-      result[i][x] = count;
-    }
-    if (size ** 2 > count) turnLeft(arrLength, arrLength, count - 1);
-  }
-
-  function turnLeft(x, y, n) {
-    let count = n;
-    for (let i = x; i >= currentLap; i -= 1) {
-      count += 1;
-      result[y][i] = count;
-    }
-    if (size ** 2 > count) turnUp(currentLap, arrLength, count - 1);
-  }
-
-  function turnUp(x, y, n) {
-    let count = n;
-    for (let i = y; i >= size - arrLength; i -= 1) {
-      count += 1;
-      result[i][x] = count;
-    }
-    arrLength -= 1;
-    currentLap += 1;
-    if (size ** 2 > count) turnRight(currentLap, currentLap, count);
-  }
-
-  turnRight(0, 0, 0);
   return result;
 }
 
